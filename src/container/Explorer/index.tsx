@@ -16,7 +16,7 @@ import { Container, Loader, Title, Content, Navigator } from './styles'
 
 export const Explorer: React.FC = () => {
   const txs = useFetch(GET_TX_ENDPOINT) // Get up-to-dated & sorted transactions
-  const [filterOption, setFilterOption] = useState(FilterOption.Success)
+  const [filterOption, setFilterOption] = useState(FilterOption.Success) // Set default filter to `Success` for filtering transactions
   const filteredTxs = txs.filter((item) => {
     switch (filterOption) {
       case FilterOption.Success:
@@ -30,7 +30,8 @@ export const Explorer: React.FC = () => {
   })
   const [index, setIndex] = useState(0) // current index of filtered Txs
 
-  if (filteredTxs.length === 0)
+  if (filteredTxs.length === 0) {
+    // Show loader while fetching transactions
     return (
       <Container>
         <Loader>
@@ -38,6 +39,7 @@ export const Explorer: React.FC = () => {
         </Loader>
       </Container>
     )
+  }
 
   const {
     sender,
@@ -54,10 +56,12 @@ export const Explorer: React.FC = () => {
   } = filteredTxs[index]
 
   const handlePrevTx = () => {
+    // Set prev transaction to show
     setIndex(index - 1)
   }
 
   const handleNextTx = () => {
+    // Set next transaction to show
     setIndex(index + 1)
   }
 
@@ -66,13 +70,15 @@ export const Explorer: React.FC = () => {
       return
     }
 
+    // Set filter option from one of ['All', 'Success', 'Failure']
     setFilterOption(event.target.value as FilterOption)
+    // Show the first transaction once the filter option has been changed
     setIndex(0)
   }
 
   return (
     <Container>
-      <Title> Figment Transaction Explorer </Title>
+      <Title>Figment Transaction Explorer</Title>
 
       <Navigator>
         <Button onClick={handlePrevTx} disabled={index <= 0}>
