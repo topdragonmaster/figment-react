@@ -1,17 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import get from 'lodash/get'
 
-import { GET_TX_ENDPOINT } from '../../constants'
+import { GET_TX_ENDPOINT, FilterOptions } from '../../constants'
 import { useFetch } from '../../hooks'
-import { TextMap, ActionItem } from '../../components'
+import { FilterOption } from '../../types'
+import {
+  TextMap,
+  ActionItem,
+  Button,
+  Select,
+  TextState,
+} from '../../components'
 
-import { Container, Loader, Title, Content } from './styles'
-import { TextState } from '../../components/common/styles'
+import { Container, Loader, Title, Content, Navigator } from './styles'
 
 export const Explorer: React.FC = () => {
-  const txs = useFetch(GET_TX_ENDPOINT)
+  const txs = useFetch(GET_TX_ENDPOINT) // Get up-to-dated & sorted transactions
+  const [filterOption, setFilterOption] = useState(FilterOption.Success)
+  const filteredTxs = txs.filter((item) => {
+    switch (filterOption) {
+      case FilterOption.Success:
+        return item.success
+      case FilterOption.Failure:
+        return !item.success
+      case FilterOption.All:
+      default:
+        return true
+    }
+  })
+  const [index, setIndex] = useState(0) // current index of filtered Txs
 
-  if (txs.length === 0)
+  if (filteredTxs.length === 0)
     return (
       <Container>
         <Loader>
@@ -32,11 +51,54 @@ export const Explorer: React.FC = () => {
     actions_count,
     success,
     actions,
-  } = txs[0]
+  } = filteredTxs[index]
+
+  const handlePrevTx = () => {
+    setIndex(index - 1)
+  }
+
+  const handleNextTx = () => {
+    setIndex(index + 1)
+  }
+
+  const handleFilterTx = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (filterOption === event.target.value) {
+      return
+    }
+
+    setFilterOption(event.target.value as FilterOption)
+    setIndex(0)
+  }
 
   return (
     <Container>
       <Title> Figment Transaction Explorer </Title>
+
+      <Navigator>
+        <Button onClick={handlePrevTx} disabled={index <= 0}>
+          Prev
+        </Button>
+
+        <div>
+          <strong>
+            Transaction {index + 1} / {filteredTxs.length}
+          </strong>
+          <Select onChange={handleFilterTx} value={filterOption}>
+            {FilterOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        <Button
+          onClick={handleNextTx}
+          disabled={index >= filteredTxs.length - 1}
+        >
+          Next
+        </Button>
+      </Navigator>
 
       <Content>
         <TextMap label="Sender :" content={sender} />
@@ -44,9 +106,15 @@ export const Explorer: React.FC = () => {
 
         <hr />
 
-        <TextMap label="Created_time :" content={created_at} />
-        <TextMap label="Updated_time :" content={updated_at} />
-        <TextMap label="Time :" content={time} />
+        <TextMap
+          label="Created_time :"
+          content={new Date(created_at).toLocaleString()}
+        />
+        <TextMap
+          label="Updated_time :"
+          content={new Date(updated_at).toLocaleString()}
+        />
+        <TextMap label="Time :" content={new Date(time).toLocaleString()} />
 
         <hr />
 
@@ -59,9 +127,9 @@ export const Explorer: React.FC = () => {
           state={success ? TextState.success : TextState.failure}
         />
 
-        <h1>{actions_count} Action(s)</h1>
-
         <hr />
+
+        <h1>{actions_count} Action(s)</h1>
 
         {actions.map((item, index) => {
           return (
@@ -69,7 +137,6 @@ export const Explorer: React.FC = () => {
               key={index}
               gas={get(item.data, 'gas', undefined)}
               deposit={get(item.data, 'deposit', undefined)}
-              type={item.type}
               method_name={get(item.data, 'method_name', undefined)}
             />
           )

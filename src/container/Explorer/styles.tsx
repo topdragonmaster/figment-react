@@ -1,11 +1,5 @@
 import styled from 'styled-components'
 
-export const LoadingWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;  width 1200px;
@@ -21,6 +15,14 @@ export const Loader = styled.div`
   flex: 1;
   align-items: center;
   justify-content: center;
+`
+
+export const Navigator = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
 `
 
 export const Title = styled.h1`

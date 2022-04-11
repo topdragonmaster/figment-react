@@ -24,3 +24,9 @@ export interface ITransaction {
   actions_count: number
   success: boolean
 }
+
+export enum FilterOption {
+  All = 'all',
+  Success = 'success',
+  Failure = 'failed',
+}
