@@ -14,7 +14,13 @@ export const Container = styled.div`
   border: 1px solid #e7eaf3;
   border-radius: 0.5rem;
   padding: 30px;
-  margin: 30px auto;
+`
+
+export const Loader = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 `
 
 export const Title = styled.h1`

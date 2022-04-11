@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export enum TextState {
   normal,
   success,
-  false,
+  failure,
 }
 
 export const Label = styled.p`
