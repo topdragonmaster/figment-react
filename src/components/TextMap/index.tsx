@@ -13,6 +13,7 @@ const Container = styled.div`
   display: flex;
   background: white;
   align-items: center;
+  flex: 1;
 `
 
 export const TextMap: React.FC<ITextMap> = ({

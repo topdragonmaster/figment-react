@@ -7,7 +7,6 @@ interface IActionItem {
   gas?: number
   deposit?: string
   method_name?: string
-  type?: string
 }
 
 const Container = styled.div`
@@ -33,7 +32,6 @@ export const ActionItem: React.FC<IActionItem> = ({
   gas,
   deposit,
   method_name,
-  type,
 }) => {
   return (
     <Container>
@@ -57,11 +55,6 @@ export const ActionItem: React.FC<IActionItem> = ({
           <Text state={TextState.normal}>{method_name}</Text>
         </Meta>
       )}
-
-      <Meta>
-        <Label>Type:</Label>
-        <Text state={TextState.normal}>{type}</Text>
-      </Meta>
     </Container>
   )
 }
