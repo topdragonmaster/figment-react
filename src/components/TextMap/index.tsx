@@ -1,11 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-enum TextState {
-  normal,
-  success,
-  false,
-}
+import { TextState, Label, Text } from '../common/styles'
 
 interface ITextMap {
   label: string
@@ -19,31 +15,6 @@ const Container = styled.div`
   align-items: center;
 `
 
-const Label = styled.p`
-  padding-left: 20px;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  margin: 0px;
-  padding: 10px;
-`
-
-const Content = styled.p<{ state: TextState }>`
-  padding-left: 20px;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  margin: 0px;
-  flex: 1;
-  color: ${(props: { state: TextState }) =>
-    props.state === TextState.normal
-      ? 'black'
-      : props.state === TextState.success
-      ? 'green'
-      : 'red'};
-  padding: 10px;
-`
-
 export const TextMap: React.FC<ITextMap> = ({
   label,
   content,
@@ -52,7 +23,7 @@ export const TextMap: React.FC<ITextMap> = ({
   return (
     <Container>
       <Label>{label}</Label>
-      <Content state={state}>{content}</Content>
+      <Text state={state}>{content}</Text>
     </Container>
   )
 }
